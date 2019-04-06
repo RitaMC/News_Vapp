@@ -1,71 +1,304 @@
+
 {
-	"invocation": "my test app",
-	"intents": [
-		{
-			"name": "HelloWorldIntent",
-			"phrases": [
-				"hello",
-				"say hello",
-				"say hello world"
-			]
-		},
-		{
-			"name": "MyNameIsIntent",
-			"phrases": [
-				"{name}",
-				"my name is {name}",
-				"i am {name}",
-				"you can call me {name}"
-			],
-			"inputs": [
-				{
-					"name": "name",
-					"type": {
-						"alexa": "AMAZON.US_FIRST_NAME",
-						"dialogflow": "@sys.given-name"
-					}
-				}
-			]
-		}
-	],
-	"alexa": {
-		"interactionModel": {
-			"languageModel": {
-				"intents": [
-					{
-						"name": "AMAZON.CancelIntent",
-						"samples": []
-					},
-					{
-						"name": "AMAZON.HelpIntent",
-						"samples": []
-					},
-					{
-						"name": "AMAZON.StopIntent",
-						"samples": []
-					}
-				]
-			}
-		}
-	},
-	"dialogflow": {
-		"intents": [
-			{
-				"name": "Default Fallback Intent",
-				"auto": true,
-				"webhookUsed": true,
-				"fallbackIntent": true
-			},
-			{
-				"name": "Default Welcome Intent",
-				"auto": true,
-				"webhookUsed": true,
-				"events": [
-					{
-						"name": "WELCOME"
-					}
-				]
-			}
-		]
-	}
+    "invocation":"the informed",
+    "intents":[
+        {
+            "name":"NewsIntent",
+            "phrases":[
+                "news",
+                "top {newsNumber} news about {theme}",
+                "i want to hear the news about {theme}",
+                "top {newsNumber} about {theme}",
+                "tell me the news",
+                "i want to hear the news",
+                "top {newsNumber} news",
+                "i want {day} news",
+                "give me an update",
+                "give me the top {newsNumber}",
+                "i want to hear the top {newsNumber} about {theme}",
+                "what's happening lately on {theme}",
+                "give me the top {newsNumber} for {theme}",
+                "give me this {day} news",
+                "tell me {day} news",
+                "give me the news about {theme}",
+                "i want the top {newsNumber}",
+                "{day} news",
+                "news from {day}",
+                "give me the top {newsNumber} news",
+                "get me the news",
+                "what about the {theme}"
+            ],
+            "inputs":[
+                {
+                    "name":"newsNumber",
+                    "type":{
+                        "alexa":"AMAZON.NUMBER",
+                        "dialogflow":"@sys.number"
+                    }
+                },
+                {
+                    "name":"day",
+                    "type":{
+                        "alexa":"AMAZON.DATE",
+                        "dialogflow":"@sys.date"
+                    }
+                },
+                {
+                    "name":"theme",
+                    "type":"Themes"
+                }
+            ]
+        },
+        {
+            "name":"FallbackIntent",
+            "alexa":{
+                "name":"AMAZON.FallbackIntent"
+            },
+            "phrases":[
+            ]
+        },
+        {
+            "name":"YesIntent",
+            "alexa":{
+                "name":"AMAZON.YesIntent"
+            },
+            "phrases":[
+                "absolutely",
+                "sure",
+                "yeap",
+                "yes",
+                "okay",
+                "of course"
+            ]
+        },
+        {
+            "name":"HeadlinesIntent",
+            "phrases":[
+                "give me the headlines about {themeHeadlines}",
+                "give me this {dayHeadlines} headlines",
+                "i want to hear the headlines",
+                "what are the main headlines about {themeHeadlines}",
+                "tell me the headlines",
+                "tell me the headlines about {themeHeadlines}",
+                "give me the headlines",
+                "i want {themeHeadlines} headlines",
+                "headlines",
+                "what are the headlines today",
+                "headlines from {dayHeadlines}",
+                "i want the top {headlinesNumber} about {themeHeadlines}",
+                "i want {dayHeadlines} headlines",
+                "give me the top {headlinesNumber} headlines",
+                "give me a quick update",
+                "give me a fast update",
+                "i want the top {headlinesNumber} headlines",
+                "tell me {dayHeadlines} headlines",
+                "give me the headlines from {dayHeadlines}",
+                "give me the top {headlinesNumber}",
+                "headlines about {themeHeadlines}",
+                "top {headlinesNumber} headlines about {themeHeadlines}",
+                "top {headlinesNumber} about {themeHeadlines}",
+                "i want to hear headlines about {themeHeadlines}",
+                "what are the main headlines of {dayHeadlines}",
+                "{dayHeadlines} headlines",
+                "give me the top {headlinesNumber} about {themeHeadlines}",
+                "get me the headlines"
+            ],
+            "inputs":[
+                {
+                    "name":"dayHeadlines",
+                    "type":{
+                        "alexa":"AMAZON.DATE",
+                        "dialogflow":"@sys.date"
+                    }
+                },
+                {
+                    "name":"themeHeadlines",
+                    "type":"Themes"
+                },
+                {
+                    "name":"headlinesNumber",
+                    "type":{
+                        "alexa":"AMAZON.NUMBER",
+                        "dialogflow":"@sys.number"
+                    }
+                }
+            ]
+        },
+        {
+            "name":"StopIntent",
+            "alexa":{
+                "name":"AMAZON.StopIntent"
+            },
+            "phrases":[
+                "logout",
+                "close",
+                "exit",
+                "goodbye",
+                "stop",
+                "quit",
+                "bye"
+            ]
+        },
+        {
+            "name":"NoIntent",
+            "alexa":{
+                "name":"AMAZON.NoIntent"
+            },
+            "phrases":[
+                "no",
+                "never",
+                "nope"
+            ]
+        },
+        {
+            "name":"HelpIntent",
+            "alexa":{
+                "name":"AMAZON.HelpIntent"
+            },
+            "phrases":[
+                "help",
+                "i don't know what to do",
+                "give me some help",
+                "what can i do",
+                "what do you do",
+                "what can i do in this skill"
+            ]
+        },
+        {
+            "name":"RepeatIntent",
+            "alexa":{
+                "name":"AMAZON.RepeatIntent"
+            },
+            "phrases":[
+                "can you repeat what you said",
+                "repeat it",
+                "i didn't get that",
+                "repeat",
+                "i didn't hear you",
+                "what did you said",
+                "can you repeat"
+            ]
+        },
+        {
+            "name":"CancelIntent",
+            "alexa":{
+                "name":"AMAZON.CancelIntent"
+            },
+            "phrases":[
+                "Cancel"
+            ]
+        }
+    ],
+    "inputTypes":[
+        {
+            "name":"Themes",
+            "values":[
+                {
+                    "value":"Art"
+                },
+                {
+                    "value":"Business"
+                },
+                {
+                    "value":"Politics"
+                },
+                {
+                    "value":"Health"
+                },
+                {
+                    "value":"Science"
+                },
+                {
+                    "value":"Technology"
+                },
+                {
+                    "value":"World"
+                },
+                {
+                    "value":"Lifestyle"
+                },
+                {
+                    "value":"General",
+                    "synonyms":[
+                        "Everything"
+                    ]
+                },
+                {
+                    "value":"Entertainment"
+                },
+                {
+                    "value":"Films",
+                    "synonyms":[
+                        "Movies"
+                    ]
+                },
+                {
+                    "value":"Education",
+                    "synonyms":[
+                        "School"
+                    ]
+                },
+                {
+                    "value":"Sports"
+                },
+                {
+                    "value":"Economy",
+                    "synonyms":[
+                        "Finances"
+                    ]
+                },
+                {
+                    "value":"Fashion"
+                }
+            ]
+        }
+    ],
+    "dialogflow":{
+        "intents":[
+            {
+                "name":"WelcomeIntent",
+                "auto":true,
+                "contexts":[
+                ],
+                "responses":[
+                    {
+                        "resetContexts":false,
+                        "affectedContexts":[
+                        ],
+                        "parameters":[
+                        ],
+                        "messages":[
+                        ],
+                        "defaultResponsePlatforms":{
+                        },
+                        "speech":[
+                        ]
+                    }
+                ],
+                "webhookUsed":true,
+                "events":[
+                    {
+                        "name":"WELCOME"
+                    }
+                ],
+                "userSays":[
+                ]
+            }
+        ]
+    },
+    "alexa":{
+        "interactionModel":{
+            "languageModel":{
+                "intents":[
+                    {
+                        "name":"NavigateHomeIntent",
+                        "samples":[
+                        ],
+                        "slots":[
+                        ]
+                    }
+                ]
+            }
+        }
+    }
 }

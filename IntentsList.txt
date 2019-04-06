@@ -1,0 +1,10 @@
+Intents for the informed
+- News
+- Headlines
+- Yes Intent (especializados + normal)
+- No Intent (especializados + normal)
+- Repeat Intent
+- Help Intent
+- Cancel Intent
+- Stop Intent
+- Fallback Intent

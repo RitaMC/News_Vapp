@@ -1,0 +1,29 @@
+{
+	"name": "HeadlinesIntent",
+	"auto": true,
+	"webhookUsed": true,
+	"responses": [
+		{
+			"parameters": [
+				{
+					"isList": false,
+					"name": "dayHeadlines",
+					"value": "$dayHeadlines",
+					"dataType": "@sys.date"
+				},
+				{
+					"isList": false,
+					"name": "themeHeadlines",
+					"value": "$themeHeadlines",
+					"dataType": "@Themes"
+				},
+				{
+					"isList": false,
+					"name": "headlinesNumber",
+					"value": "$headlinesNumber",
+					"dataType": "@sys.number"
+				}
+			]
+		}
+	]
+}

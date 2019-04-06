@@ -1,0 +1,22 @@
+{
+	"name": "WelcomeIntent",
+	"auto": true,
+	"contexts": [],
+	"responses": [
+		{
+			"resetContexts": false,
+			"affectedContexts": [],
+			"parameters": [],
+			"messages": [],
+			"defaultResponsePlatforms": {},
+			"speech": []
+		}
+	],
+	"webhookUsed": true,
+	"events": [
+		{
+			"name": "WELCOME"
+		}
+	],
+	"userSays": []
+}

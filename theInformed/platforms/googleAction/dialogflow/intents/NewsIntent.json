@@ -1,0 +1,29 @@
+{
+	"name": "NewsIntent",
+	"auto": true,
+	"webhookUsed": true,
+	"responses": [
+		{
+			"parameters": [
+				{
+					"isList": false,
+					"name": "newsNumber",
+					"value": "$newsNumber",
+					"dataType": "@sys.number"
+				},
+				{
+					"isList": false,
+					"name": "day",
+					"value": "$day",
+					"dataType": "@sys.date"
+				},
+				{
+					"isList": false,
+					"name": "theme",
+					"value": "$theme",
+					"dataType": "@Themes"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,275 @@
+{
+	"interactionModel": {
+		"languageModel": {
+			"invocationName": "the informed",
+			"types": [
+				{
+					"name": "Themes",
+					"values": [
+						{
+							"id": null,
+							"name": {
+								"value": "Art"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Business"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Politics"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Health"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Science"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Technology"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "World"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Lifestyle"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "General",
+								"synonyms": [
+									"Everything"
+								]
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Entertainment"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Films",
+								"synonyms": [
+									"Movies"
+								]
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Education",
+								"synonyms": [
+									"School"
+								]
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Sports"
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Economy",
+								"synonyms": [
+									"Finances"
+								]
+							}
+						},
+						{
+							"id": null,
+							"name": {
+								"value": "Fashion"
+							}
+						}
+					]
+				}
+			],
+			"intents": [
+				{
+					"name": "NewsIntent",
+					"samples": [
+						"news",
+						"top {newsNumber} news about {theme}",
+						"i want to hear the news about {theme}",
+						"top {newsNumber} about {theme}",
+						"tell me the news",
+						"i want to hear the news",
+						"top {newsNumber} news",
+						"i want {day} news",
+						"give me an update",
+						"give me the top {newsNumber}",
+						"i want to hear the top {newsNumber} about {theme}",
+						"what's happening lately on {theme}",
+						"give me the top {newsNumber} for {theme}",
+						"give me this {day} news",
+						"tell me {day} news",
+						"give me the news about {theme}",
+						"i want the top {newsNumber}",
+						"{day} news",
+						"news from {day}",
+						"give me the top {newsNumber} news",
+						"get me the news",
+						"what about the {theme}"
+					],
+					"slots": [
+						{
+							"name": "newsNumber",
+							"type": "AMAZON.NUMBER"
+						},
+						{
+							"name": "day",
+							"type": "AMAZON.DATE"
+						},
+						{
+							"name": "theme",
+							"type": "Themes"
+						}
+					]
+				},
+				{
+					"name": "AMAZON.FallbackIntent",
+					"samples": []
+				},
+				{
+					"name": "AMAZON.YesIntent",
+					"samples": [
+						"absolutely",
+						"sure",
+						"yeap",
+						"yes",
+						"okay",
+						"of course"
+					]
+				},
+				{
+					"name": "HeadlinesIntent",
+					"samples": [
+						"give me the headlines about {themeHeadlines}",
+						"give me this {dayHeadlines} headlines",
+						"i want to hear the headlines",
+						"what are the main headlines about {themeHeadlines}",
+						"tell me the headlines",
+						"tell me the headlines about {themeHeadlines}",
+						"give me the headlines",
+						"i want {themeHeadlines} headlines",
+						"headlines",
+						"what are the headlines today",
+						"headlines from {dayHeadlines}",
+						"i want the top {headlinesNumber} about {themeHeadlines}",
+						"i want {dayHeadlines} headlines",
+						"give me the top {headlinesNumber} headlines",
+						"give me a quick update",
+						"give me a fast update",
+						"i want the top {headlinesNumber} headlines",
+						"tell me {dayHeadlines} headlines",
+						"give me the headlines from {dayHeadlines}",
+						"give me the top {headlinesNumber}",
+						"headlines about {themeHeadlines}",
+						"top {headlinesNumber} headlines about {themeHeadlines}",
+						"top {headlinesNumber} about {themeHeadlines}",
+						"i want to hear headlines about {themeHeadlines}",
+						"what are the main headlines of {dayHeadlines}",
+						"{dayHeadlines} headlines",
+						"give me the top {headlinesNumber} about {themeHeadlines}",
+						"get me the headlines"
+					],
+					"slots": [
+						{
+							"name": "dayHeadlines",
+							"type": "AMAZON.DATE"
+						},
+						{
+							"name": "themeHeadlines",
+							"type": "Themes"
+						},
+						{
+							"name": "headlinesNumber",
+							"type": "AMAZON.NUMBER"
+						}
+					]
+				},
+				{
+					"name": "AMAZON.StopIntent",
+					"samples": [
+						"logout",
+						"close",
+						"exit",
+						"goodbye",
+						"stop",
+						"quit",
+						"bye"
+					]
+				},
+				{
+					"name": "AMAZON.NoIntent",
+					"samples": [
+						"no",
+						"never",
+						"nope"
+					]
+				},
+				{
+					"name": "AMAZON.HelpIntent",
+					"samples": [
+						"help",
+						"i don't know what to do",
+						"give me some help",
+						"what can i do",
+						"what do you do",
+						"what can i do in this skill"
+					]
+				},
+				{
+					"name": "AMAZON.RepeatIntent",
+					"samples": [
+						"can you repeat what you said",
+						"repeat it",
+						"i didn't get that",
+						"repeat",
+						"i didn't hear you",
+						"what did you said",
+						"can you repeat"
+					]
+				},
+				{
+					"name": "AMAZON.CancelIntent",
+					"samples": [
+						"Cancel"
+					]
+				},
+				{
+					"name": "NavigateHomeIntent",
+					"samples": [],
+					"slots": []
+				}
+			]
+		}
+	}
+}

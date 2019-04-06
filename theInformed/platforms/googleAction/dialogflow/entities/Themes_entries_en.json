@@ -1,0 +1,96 @@
+[
+	{
+		"value": "Art",
+		"synonyms": [
+			"Art"
+		]
+	},
+	{
+		"value": "Business",
+		"synonyms": [
+			"Business"
+		]
+	},
+	{
+		"value": "Politics",
+		"synonyms": [
+			"Politics"
+		]
+	},
+	{
+		"value": "Health",
+		"synonyms": [
+			"Health"
+		]
+	},
+	{
+		"value": "Science",
+		"synonyms": [
+			"Science"
+		]
+	},
+	{
+		"value": "Technology",
+		"synonyms": [
+			"Technology"
+		]
+	},
+	{
+		"value": "World",
+		"synonyms": [
+			"World"
+		]
+	},
+	{
+		"value": "Lifestyle",
+		"synonyms": [
+			"Lifestyle"
+		]
+	},
+	{
+		"value": "General",
+		"synonyms": [
+			"General",
+			"Everything"
+		]
+	},
+	{
+		"value": "Entertainment",
+		"synonyms": [
+			"Entertainment"
+		]
+	},
+	{
+		"value": "Films",
+		"synonyms": [
+			"Films",
+			"Movies"
+		]
+	},
+	{
+		"value": "Education",
+		"synonyms": [
+			"Education",
+			"School"
+		]
+	},
+	{
+		"value": "Sports",
+		"synonyms": [
+			"Sports"
+		]
+	},
+	{
+		"value": "Economy",
+		"synonyms": [
+			"Economy",
+			"Finances"
+		]
+	},
+	{
+		"value": "Fashion",
+		"synonyms": [
+			"Fashion"
+		]
+	}
+]

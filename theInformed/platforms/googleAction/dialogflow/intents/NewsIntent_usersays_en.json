@@ -1,0 +1,384 @@
+[
+	{
+		"data": [
+			{
+				"text": "news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "top ",
+				"userDefined": false
+			},
+			{
+				"text": "newsNumber",
+				"userDefined": true,
+				"alias": "newsNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " news about ",
+				"userDefined": false
+			},
+			{
+				"text": "theme",
+				"userDefined": true,
+				"alias": "theme",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want to hear the news about ",
+				"userDefined": false
+			},
+			{
+				"text": "theme",
+				"userDefined": true,
+				"alias": "theme",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "top ",
+				"userDefined": false
+			},
+			{
+				"text": "newsNumber",
+				"userDefined": true,
+				"alias": "newsNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " about ",
+				"userDefined": false
+			},
+			{
+				"text": "theme",
+				"userDefined": true,
+				"alias": "theme",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "tell me the news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want to hear the news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "top ",
+				"userDefined": false
+			},
+			{
+				"text": "newsNumber",
+				"userDefined": true,
+				"alias": "newsNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want ",
+				"userDefined": false
+			},
+			{
+				"text": "day",
+				"userDefined": true,
+				"alias": "day",
+				"meta": "@sys.date"
+			},
+			{
+				"text": " news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me an update",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me the top ",
+				"userDefined": false
+			},
+			{
+				"text": "newsNumber",
+				"userDefined": true,
+				"alias": "newsNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want to hear the top ",
+				"userDefined": false
+			},
+			{
+				"text": "newsNumber",
+				"userDefined": true,
+				"alias": "newsNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " about ",
+				"userDefined": false
+			},
+			{
+				"text": "theme",
+				"userDefined": true,
+				"alias": "theme",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "what's happening lately on ",
+				"userDefined": false
+			},
+			{
+				"text": "theme",
+				"userDefined": true,
+				"alias": "theme",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me the top ",
+				"userDefined": false
+			},
+			{
+				"text": "newsNumber",
+				"userDefined": true,
+				"alias": "newsNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " for ",
+				"userDefined": false
+			},
+			{
+				"text": "theme",
+				"userDefined": true,
+				"alias": "theme",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me this ",
+				"userDefined": false
+			},
+			{
+				"text": "day",
+				"userDefined": true,
+				"alias": "day",
+				"meta": "@sys.date"
+			},
+			{
+				"text": " news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "tell me ",
+				"userDefined": false
+			},
+			{
+				"text": "day",
+				"userDefined": true,
+				"alias": "day",
+				"meta": "@sys.date"
+			},
+			{
+				"text": " news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me the news about ",
+				"userDefined": false
+			},
+			{
+				"text": "theme",
+				"userDefined": true,
+				"alias": "theme",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want the top ",
+				"userDefined": false
+			},
+			{
+				"text": "newsNumber",
+				"userDefined": true,
+				"alias": "newsNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "day",
+				"userDefined": true,
+				"alias": "day",
+				"meta": "@sys.date"
+			},
+			{
+				"text": " news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "news from ",
+				"userDefined": false
+			},
+			{
+				"text": "day",
+				"userDefined": true,
+				"alias": "day",
+				"meta": "@sys.date"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me the top ",
+				"userDefined": false
+			},
+			{
+				"text": "newsNumber",
+				"userDefined": true,
+				"alias": "newsNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "get me the news",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "what about the ",
+				"userDefined": false
+			},
+			{
+				"text": "theme",
+				"userDefined": true,
+				"alias": "theme",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	}
+]

@@ -1,0 +1,466 @@
+[
+	{
+		"data": [
+			{
+				"text": "give me the headlines about ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me this ",
+				"userDefined": false
+			},
+			{
+				"text": "dayHeadlines",
+				"userDefined": true,
+				"alias": "dayHeadlines",
+				"meta": "@sys.date"
+			},
+			{
+				"text": " headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want to hear the headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "what are the main headlines about ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "tell me the headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "tell me the headlines about ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me the headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			},
+			{
+				"text": " headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "what are the headlines today",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "headlines from ",
+				"userDefined": false
+			},
+			{
+				"text": "dayHeadlines",
+				"userDefined": true,
+				"alias": "dayHeadlines",
+				"meta": "@sys.date"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want the top ",
+				"userDefined": false
+			},
+			{
+				"text": "headlinesNumber",
+				"userDefined": true,
+				"alias": "headlinesNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " about ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want ",
+				"userDefined": false
+			},
+			{
+				"text": "dayHeadlines",
+				"userDefined": true,
+				"alias": "dayHeadlines",
+				"meta": "@sys.date"
+			},
+			{
+				"text": " headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me the top ",
+				"userDefined": false
+			},
+			{
+				"text": "headlinesNumber",
+				"userDefined": true,
+				"alias": "headlinesNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me a quick update",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me a fast update",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want the top ",
+				"userDefined": false
+			},
+			{
+				"text": "headlinesNumber",
+				"userDefined": true,
+				"alias": "headlinesNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "tell me ",
+				"userDefined": false
+			},
+			{
+				"text": "dayHeadlines",
+				"userDefined": true,
+				"alias": "dayHeadlines",
+				"meta": "@sys.date"
+			},
+			{
+				"text": " headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me the headlines from ",
+				"userDefined": false
+			},
+			{
+				"text": "dayHeadlines",
+				"userDefined": true,
+				"alias": "dayHeadlines",
+				"meta": "@sys.date"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me the top ",
+				"userDefined": false
+			},
+			{
+				"text": "headlinesNumber",
+				"userDefined": true,
+				"alias": "headlinesNumber",
+				"meta": "@sys.number"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "headlines about ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "top ",
+				"userDefined": false
+			},
+			{
+				"text": "headlinesNumber",
+				"userDefined": true,
+				"alias": "headlinesNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " headlines about ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "top ",
+				"userDefined": false
+			},
+			{
+				"text": "headlinesNumber",
+				"userDefined": true,
+				"alias": "headlinesNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " about ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "i want to hear headlines about ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "what are the main headlines of ",
+				"userDefined": false
+			},
+			{
+				"text": "dayHeadlines",
+				"userDefined": true,
+				"alias": "dayHeadlines",
+				"meta": "@sys.date"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "dayHeadlines",
+				"userDefined": true,
+				"alias": "dayHeadlines",
+				"meta": "@sys.date"
+			},
+			{
+				"text": " headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "give me the top ",
+				"userDefined": false
+			},
+			{
+				"text": "headlinesNumber",
+				"userDefined": true,
+				"alias": "headlinesNumber",
+				"meta": "@sys.number"
+			},
+			{
+				"text": " about ",
+				"userDefined": false
+			},
+			{
+				"text": "themeHeadlines",
+				"userDefined": true,
+				"alias": "themeHeadlines",
+				"meta": "@Themes"
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	},
+	{
+		"data": [
+			{
+				"text": "get me the headlines",
+				"userDefined": false
+			}
+		],
+		"isTemplate": false,
+		"count": 0
+	}
+]
