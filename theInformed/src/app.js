@@ -42,7 +42,7 @@ app.setHandler({
     WelcomeIntent(){
         var phrase;
 
-        if(this.$user.isNewUser){
+        if(this.$user.isNewUser()){
             this.$user.$data.numberOfTimesUsed = 0;
         }else if(this.$user.$data.numberOfTimesUsed < 5){
             phrase = "Welcome to the informed where we have the latest news and headlines from around the globe! What do you want to hear about today?";
@@ -58,8 +58,28 @@ app.setHandler({
         this.ask(this.$speech,this.$reprompt);
     },
 
-    NewsIntent(){
+    async NewsIntent(){
+        var theme = this.$inputs.theme.value;
+        var day = this.$inputs.day.value;
+        var topN = this.$inputs.newsNumber.value;
 
+        var requestParams = {
+            sources: 'bbc-news',
+            language: 'en'
+        };
+        
+        if(theme){
+            requestParams["q"] = '#{theme}';
+        }
+
+        //Verificar  se o dia È hj pq se não for temos de colocar a info "from" para além da "to"
+        if(day){
+
+        }
+
+        await newsapi.v2.everything(requestParams).then(response => {
+            this.ask(response.articles[0].title);
+        });
     },
 
     HeadlinesIntent(){
@@ -147,6 +167,5 @@ app.setHandler({
     }
 });
 
-// <-------------- Auxiliar functions ------------->
 
 module.exports.app = app;

@@ -6,6 +6,7 @@ function a(){
     newsapi.v2.topHeadlines({
         q: 'trump',
         category: 'politics',
+        from: '2019-03-05',
         language: 'en',
         country: 'us'
       }).then(response => {

@@ -33,11 +33,13 @@ module.exports = {
         },
     },
 
+    
+
     db: {
             
         //For code that is running on Lambda
         //if you are hosting the voice app elsewhere plase add an AWS config
-        DynamoDB: {
+        DynamoDb: {
             tableName: 'TheInformed',
         },
     },
