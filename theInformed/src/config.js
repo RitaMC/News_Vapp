@@ -7,14 +7,14 @@ module.exports = {
 
 // Mapping of the built-in intents
     intentMap: {
-        'Amazon.FallbackIntent' : 'FallbackIntentHandler',
-            'Amazon.YesIntent' : 'YesIntentHandler',
-            'Amazon.StopIntent' : 'END',
-            'Amazon.NoIntent' : 'NoIntentHandler',
-            'Amazon.HelpIntent' : 'HelpIntentHandler',
-            'Amazon.RepeatIntent' : 'RepeatIntentHandler',
-            'Amazon.CancelIntent' : 'CancelIntentHandler',
-            'Amazon.NavigateHomeIntent' : 'NavigateHomeIntentHandler',
+        'AMAZON.FallbackIntent' : 'FallbackIntent',
+            'AMAZON.YesIntent' : 'YesIntent',
+            'AMAZON.StopIntent' : 'END',
+            'AMAZON.NoIntent' : 'NoIntent',
+            'AMAZON.HelpIntent' : 'HelpIntent',
+            'AMAZON.RepeatIntent' : 'RepeatIntent',
+            'AMAZON.CancelIntent' : 'CancelIntent',
+            'AMAZON.NavigateHomeIntent' : 'NavigateHomeIntent',
     },
     //Define intents that shouldn't be matched to an Unhandled Intent if not found in a State
     //instead they will be captured globally

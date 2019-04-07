@@ -69,11 +69,12 @@ app.setHandler({
 
         var requestParams = {
             sources: 'bbc-news',
+            pageSize: 10,
             language: 'en'
         };
         
         if(theme){
-            requestParams["q"] = '#{theme}';
+            requestParams["q"] = `${theme}`;
             
             this.$session.$data.themeChoosen = theme;
         }
@@ -91,7 +92,7 @@ app.setHandler({
                 return;
             }
             
-             requestParams["to"] = '#{day}';
+             requestParams["to"] = `${day}`;
         }
 
         if(topN  && topN > 10){
@@ -103,11 +104,11 @@ app.setHandler({
 
             for (let index = 0; index < 3; index++) {
                 this.$speech.addText(response.articles[index].title)
-                            .addBreak("2s")
+                            .addText("<break time=\"1s\"/>")
                             .addText(response.articles[index].description)
-                            .addBreak("2s")
-                            .addText("published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
-                            .addBreak("4s");
+                            .addText("<break time=\"1s\"/>")
+                            .addText("Published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
+                            .addText("<break time=\"2s\"/>")
 
                 if(topN){
                     if(topN > 0){
@@ -120,19 +121,31 @@ app.setHandler({
             }
 
             if(topN){
+
+                //if the user asked for a top > 3
+                //else just return the news
                 if(topN > 0){
-                    this.$session.$data.topN = topN;
-                }else{
-                    //The user asked for a top <= 3
-                    this.ask(this.$speech);
-                    return;
+                    for(var i = 3; topN > 0; topN--){
+                        this.$speech.addText(response.articles[i].title)
+                        .addText("<break time=\"1s\"/>")
+                        .addText(response.articles[i].description)
+                        .addText("<break time=\"1s\"/>")
+                        .addText("Published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD"))
+                        .addText("<break time=\"2s\"/>")
+                    }
                 }
-            }else{
-                //The user didn't ask for a top and we need to know if we still wants to hear more 2 news                
-                this.$speech.addText("Want to hear more news?");
+
+                this.ask(this.$speech);
+                return;
+
             }
 
+            //The user didn't ask for a top and we need to know if we still wants to hear more 2 news                
+            this.$speech.addText("Want to hear more news?");
+
+            //So we don't have to access the API again
             this.$session.$data.articles = response.articles;
+
             this.followUpState('NewsState').ask(this.$speech);
         }, error => {
             this.ask("I am sorry but I wasn't able to gather some news for you. Please try again later.");
@@ -146,11 +159,12 @@ app.setHandler({
 
         var requestParams = {
             sources: 'bbc-news',
+            pageSize: 10,
             language: 'en'
         };
         
         if(theme){
-            requestParams["q"] = '#{theme}';
+            requestParams["q"] = `${theme}`;
             
             this.$session.$data.themeChoosen = theme;
         }
@@ -168,7 +182,7 @@ app.setHandler({
                 return;
             }
             
-             requestParams["to"] = '#{day}';
+             requestParams["to"] = `${day}`;
         }
 
         if(topN  && topN > 10){
@@ -176,12 +190,13 @@ app.setHandler({
             return;
         }
 
+        console.log(theme);
+        console.log(requestParams);
+
         await newsapi.v2.topHeadlines(requestParams).then(response => {
 
             for (let index = 0; index < 3; index++) {
                 this.$speech.addText(response.articles[index].title)
-                            .addBreak("2s")
-                            .addText(response.articles[index].description)
                             .addBreak("2s")
                             .addText("published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
                             .addBreak("4s");
@@ -255,7 +270,20 @@ app.setHandler({
 
     NewsState: {
         YesIntent(){
+            var articles = this.$session.$data.articles;
 
+            for(var i = 3; i < 5; i++){
+                this.$speech.addText(articles[i].title)
+                .addText("<break time=\"1s\"/>")
+                .addText(articles[i].description)
+                .addText("<break time=\"1s\"/>")
+                .addText("Published in "+moment(articles[i].publishedAt).format("YYYY-MM-DD"))
+                .addText("<break time=\"2s\"/>")
+            }
+
+            this.$speech("Want to hear anything else today?");
+
+            this.followUpState(null).ask(this.$speech,"Want to hear anything else today?");
         },
 
         NoIntent(){
@@ -288,7 +316,7 @@ app.setHandler({
     },
 
     FallbackIntent(){
-
+        this.tell("Error");
     },
 
     Unhandled: function(){
