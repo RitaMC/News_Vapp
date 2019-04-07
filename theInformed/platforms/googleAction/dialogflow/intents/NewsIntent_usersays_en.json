@@ -54,7 +54,7 @@
 	{
 		"data": [
 			{
-				"text": "top ",
+				"text": "give me the top ",
 				"userDefined": false
 			},
 			{
@@ -64,7 +64,7 @@
 				"meta": "@sys.number"
 			},
 			{
-				"text": " about ",
+				"text": " news for ",
 				"userDefined": false
 			},
 			{
@@ -72,16 +72,6 @@
 				"userDefined": true,
 				"alias": "theme",
 				"meta": "@Themes"
-			}
-		],
-		"isTemplate": false,
-		"count": 0
-	},
-	{
-		"data": [
-			{
-				"text": "tell me the news",
-				"userDefined": false
 			}
 		],
 		"isTemplate": false,
@@ -150,22 +140,6 @@
 	{
 		"data": [
 			{
-				"text": "give me the top ",
-				"userDefined": false
-			},
-			{
-				"text": "newsNumber",
-				"userDefined": true,
-				"alias": "newsNumber",
-				"meta": "@sys.number"
-			}
-		],
-		"isTemplate": false,
-		"count": 0
-	},
-	{
-		"data": [
-			{
 				"text": "i want to hear the top ",
 				"userDefined": false
 			},
@@ -193,32 +167,6 @@
 		"data": [
 			{
 				"text": "what's happening lately on ",
-				"userDefined": false
-			},
-			{
-				"text": "theme",
-				"userDefined": true,
-				"alias": "theme",
-				"meta": "@Themes"
-			}
-		],
-		"isTemplate": false,
-		"count": 0
-	},
-	{
-		"data": [
-			{
-				"text": "give me the top ",
-				"userDefined": false
-			},
-			{
-				"text": "newsNumber",
-				"userDefined": true,
-				"alias": "newsNumber",
-				"meta": "@sys.number"
-			},
-			{
-				"text": " for ",
 				"userDefined": false
 			},
 			{
@@ -298,6 +246,10 @@
 				"userDefined": true,
 				"alias": "newsNumber",
 				"meta": "@sys.number"
+			},
+			{
+				"text": " news",
+				"userDefined": false
 			}
 		],
 		"isTemplate": false,

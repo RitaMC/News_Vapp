@@ -12,6 +12,8 @@ const { Alexa } = require('jovo-platform-alexa');
 const { GoogleAssistant } = require('jovo-platform-googleassistant');
 const { JovoDebugger } = require('jovo-plugin-debugger');
 const { DynamoDb } = require('jovo-db-dynamodb');
+
+const moment = require('moment');
 const NewsAPI = require('newsapi');
 
 const newsapi = new NewsAPI('a66c647de3b2494eb9bd426b30cef49b');
@@ -30,6 +32,8 @@ app.use(
 const NORMAL_MAX_NEWS_HEADLINES = 5;
 
 const TOP_MAX_NEWS_HEADLINES = 10;
+
+const themes = require('./Auxiliar/themes.json');
 
 // ------------------------------------------------------------------
 // APP LOGIC
@@ -70,20 +74,145 @@ app.setHandler({
         
         if(theme){
             requestParams["q"] = '#{theme}';
+            
+            this.$session.$data.themeChoosen = theme;
         }
 
-        //Verificar  se o dia È hj pq se não for temos de colocar a info "from" para além da "to"
         if(day){
+            var datetime = new Date();
+            var currentDay = moment(datetime);
+            var askedDay = moment(day);
 
+            if(currentDay.diff(askedDay) > 604800000){
+                this.ask("You cannot ask for news that are more than one week old.");
+                return;
+            }else if(currentDay.diff(askedDay) < 0){
+                this.ask("You cannot ask for tomorrow's news");
+                return;
+            }
+            
+             requestParams["to"] = '#{day}';
+        }
+
+        if(topN  && topN > 10){
+            this.ask("The maximum number of news you can ask for is 10.");
+            return;
         }
 
         await newsapi.v2.everything(requestParams).then(response => {
-            this.ask(response.articles[0].title);
+
+            for (let index = 0; index < 3; index++) {
+                this.$speech.addText(response.articles[index].title)
+                            .addBreak("2s")
+                            .addText(response.articles[index].description)
+                            .addBreak("2s")
+                            .addText("published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
+                            .addBreak("4s");
+
+                if(topN){
+                    if(topN > 0){
+                        topN--;
+                    }else{
+                        break;
+                    }
+                }
+                
+            }
+
+            if(topN){
+                if(topN > 0){
+                    this.$session.$data.topN = topN;
+                }else{
+                    //The user asked for a top <= 3
+                    this.ask(this.$speech);
+                    return;
+                }
+            }else{
+                //The user didn't ask for a top and we need to know if we still wants to hear more 2 news                
+                this.$speech.addText("Want to hear more news?");
+            }
+
+            this.$session.$data.articles = response.articles;
+            this.followUpState('NewsState').ask(this.$speech);
+        }, error => {
+            this.ask("I am sorry but I wasn't able to gather some news for you. Please try again later.");
         });
     },
 
-    HeadlinesIntent(){
+    async HeadlinesIntent(){
+        var theme = this.$inputs.theme.value;
+        var day = this.$inputs.day.value;
+        var topN = this.$inputs.newsNumber.value;
 
+        var requestParams = {
+            sources: 'bbc-news',
+            language: 'en'
+        };
+        
+        if(theme){
+            requestParams["q"] = '#{theme}';
+            
+            this.$session.$data.themeChoosen = theme;
+        }
+
+        if(day){
+            var datetime = new Date();
+            var currentDay = moment(datetime);
+            var askedDay = moment(day);
+
+            if(currentDay.diff(askedDay) > 604800000){
+                this.ask("You cannot ask for headlines that are more than one week old.");
+                return;
+            }else if(currentDay.diff(askedDay) < 0){
+                this.ask("You cannot ask for tomorrow's headlines");
+                return;
+            }
+            
+             requestParams["to"] = '#{day}';
+        }
+
+        if(topN  && topN > 10){
+            this.ask("The maximum number of headlines you can ask for is 10.");
+            return;
+        }
+
+        await newsapi.v2.topHeadlines(requestParams).then(response => {
+
+            for (let index = 0; index < 3; index++) {
+                this.$speech.addText(response.articles[index].title)
+                            .addBreak("2s")
+                            .addText(response.articles[index].description)
+                            .addBreak("2s")
+                            .addText("published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
+                            .addBreak("4s");
+
+                if(topN){
+                    if(topN > 0){
+                        topN--;
+                    }else{
+                        break;
+                    }
+                }
+                
+            }
+
+            if(topN){
+                if(topN > 0){
+                    this.$session.$data.topN = topN;
+                }else{
+                    //The user asked for a top <= 3
+                    this.ask(this.$speech);
+                    return;
+                }
+            }else{
+                //The user didn't ask for a top and we need to know if we still wants to hear more 2 headlines              
+                this.$speech.addText("Want to hear more headlines?");
+            }
+
+            this.$session.$data.articles = response.articles;
+            this.followUpState('HeadlinesState').ask(this.$speech);
+        },
+         error => { this.ask("I am sorry but I wasn't able to gather some headlines for you. Please try again later.");});
     },
 
     RepeatIntent(){
@@ -107,9 +236,9 @@ app.setHandler({
         this.ask(this.$speech,this.$reprompt);
     },
 
-    //After this intent the user will likely say yes or no and we need to provide him an answer accordingly
+  
     CancelIntent(){
-        this.ask(this.$speech.addText("Want to do anything else today?"));
+        this.ask("Want to do anything else today?");
     },
 
     YesIntent(){
@@ -117,11 +246,11 @@ app.setHandler({
     },
 
     NoIntent(){
-
+        this.tell("Thank you for using the informed. Until a next time!");
     },
 
     StopIntent(){
-        this.tell(this.$speech.addText("Thank you for using the informed, your loyal news source. See you next time!"));
+        this.tell("Thank you for using the informed, your loyal news source. See you next time!");
     },
 
     NewsState: {
@@ -130,7 +259,7 @@ app.setHandler({
         },
 
         NoIntent(){
-
+            this.ask("Want to hear anything else today?","Perhaps some headlines about Business or Education.");
         }
     },
 
@@ -140,7 +269,7 @@ app.setHandler({
         },
 
         NoIntent(){
-
+            this.ask("Want to hear anything else today?","Perhaps some news about Business or Education.");
         }
     },
 

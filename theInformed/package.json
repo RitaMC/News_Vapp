@@ -10,6 +10,7 @@
     "jovo-platform-alexa": "^2.0.2",
     "jovo-platform-googleassistant": "^2.0.2",
     "jovo-plugin-debugger": "^2.0.2",
+    "moment": "^2.24.0",
     "newsapi": "^2.4.0"
   },
   "devDependencies": {
