@@ -127,17 +127,18 @@ app.setHandler({
                 if(topN > 0){
                     for(var i = 3; topN > 0; topN--){
                         this.$speech.addText(response.articles[i].title)
-                        .addText("<break time=\"1s\"/>")
-                        .addText(response.articles[i].description)
-                        .addText("<break time=\"1s\"/>")
-                        .addText("Published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD"))
-                        .addText("<break time=\"2s\"/>")
+                                    .addText("<break time=\"1s\"/>")
+                                    .addText(response.articles[i].description)
+                                    .addText("<break time=\"1s\"/>")
+                                    .addText("Published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD"))
+                                    .addText("<break time=\"2s\"/>")
                     }
                 }
+                
+                this.$speech.addText("Want to do do anything else today?");
 
                 this.ask(this.$speech);
                 return;
-
             }
 
             //The user didn't ask for a top and we need to know if we still wants to hear more 2 news                
@@ -146,7 +147,7 @@ app.setHandler({
             //So we don't have to access the API again
             this.$session.$data.articles = response.articles;
 
-            this.followUpState('NewsState').ask(this.$speech);
+            this.followUpState('NewsState').ask(this.$speech,"Want to hear more news?");
         }, error => {
             this.ask("I am sorry but I wasn't able to gather some news for you. Please try again later.");
         });
@@ -171,13 +172,11 @@ app.setHandler({
 
         if(day){
             var datetime = new Date();
-            var currentDay = moment(datetime);
-            var askedDay = moment(day);
 
-            if(currentDay.diff(askedDay) > 604800000){
+            if(moment(datetime).diff(moment(day)) > 604800000){
                 this.ask("You cannot ask for headlines that are more than one week old.");
                 return;
-            }else if(currentDay.diff(askedDay) < 0){
+            }else if(moment(datetime).diff(moment(day)) < 0){
                 this.ask("You cannot ask for tomorrow's headlines");
                 return;
             }
@@ -185,21 +184,18 @@ app.setHandler({
              requestParams["to"] = `${day}`;
         }
 
-        if(topN  && topN > 10){
+        if(topN && topN > 10){
             this.ask("The maximum number of headlines you can ask for is 10.");
             return;
         }
 
-        console.log(theme);
-        console.log(requestParams);
-
         await newsapi.v2.topHeadlines(requestParams).then(response => {
 
-            for (let index = 0; index < 3; index++) {
+            for (var index = 0; index < 3; index++) {
                 this.$speech.addText(response.articles[index].title)
-                            .addBreak("2s")
+                            .addText("<break time=\"1s\"/>")
                             .addText("published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
-                            .addBreak("4s");
+                            .addText("<break time=\"2s\"/>")
 
                 if(topN){
                     if(topN > 0){
@@ -213,19 +209,27 @@ app.setHandler({
 
             if(topN){
                 if(topN > 0){
-                    this.$session.$data.topN = topN;
-                }else{
-                    //The user asked for a top <= 3
+                    for(var i = 3 ; topN > 0; topN--){
+                        this.$speech.addText(response.articles[i].title)
+                                    .addText("<break time=\"1s\"/>")
+                                    .addText("published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD"))
+                                    .addText("<break time=\"2s\"/>")
+                    }
+                    this.$speech.addText("Want to do do anything else today?");
+                
                     this.ask(this.$speech);
                     return;
-                }
-            }else{
-                //The user didn't ask for a top and we need to know if we still wants to hear more 2 headlines              
-                this.$speech.addText("Want to hear more headlines?");
-            }
 
+                }
+            }
+            
+            //The user didn't ask for a top and we need to know if we still wants to hear more 2 headlines              
+            this.$speech.addText("Want to hear more headlines?");
+
+            //So we don't have to access the API again
             this.$session.$data.articles = response.articles;
-            this.followUpState('HeadlinesState').ask(this.$speech);
+
+            this.followUpState('HeadlinesState').ask(this.$speech,"Want to hear more headlines?");
         },
          error => { this.ask("I am sorry but I wasn't able to gather some headlines for you. Please try again later.");});
     },
@@ -245,7 +249,9 @@ app.setHandler({
 
     HelpIntent(){
         this.$speech.addText("You can ask me for the latest news or the top headlines of the day. You can also ask me for news or headlines about a specific topic.")
-                    .addBreak("200ms").addText("Want to know more?");
+                    .addText("<break time=\"1s\"/>")
+                    .addText("Want to know more?");
+                    
         this.$reprompt.addText("Want to know more?");
 
         this.ask(this.$speech,this.$reprompt);
@@ -274,16 +280,16 @@ app.setHandler({
 
             for(var i = 3; i < 5; i++){
                 this.$speech.addText(articles[i].title)
-                .addText("<break time=\"1s\"/>")
-                .addText(articles[i].description)
-                .addText("<break time=\"1s\"/>")
-                .addText("Published in "+moment(articles[i].publishedAt).format("YYYY-MM-DD"))
-                .addText("<break time=\"2s\"/>")
+                            .addText("<break time=\"1s\"/>")
+                            .addText(articles[i].description)
+                            .addText("<break time=\"1s\"/>")
+                            .addText("Published in "+moment(articles[i].publishedAt).format("YYYY-MM-DD"))
+                            .addText("<break time=\"2s\"/>")
             }
 
-            this.$speech("Want to hear anything else today?");
+            this.$speech("Want to do anything else today?");
 
-            this.followUpState(null).ask(this.$speech,"Want to hear anything else today?");
+            this.followUpState(null).ask(this.$speech,"Want to do anything else today?");
         },
 
         NoIntent(){
@@ -293,18 +299,30 @@ app.setHandler({
 
     HeadlinesState: {
         YesIntent(){
+            var articles = this.$session.$data.articles;
 
+            for(var i = 3; i < 5; i++){
+                this.$speech.addText(articles[i].title)
+                            .addText("<break time=\"1s\"/>")
+                            .addText("Published in "+moment(articles[i].publishedAt).format("YYYY-MM-DD"))
+                            .addText("<break time=\"2s\"/>")
+            }
+
+            this.$speech.addText("Want to do anything else today?");
+            this.followUpState(null).ask(this.$speech,"Want to do anything else today?");
         },
 
         NoIntent(){
-            this.ask("Want to hear anything else today?","Perhaps some news about Business or Education.");
+            this.ask("Want to do anything else today?","Perhaps some news about Business or Education.");
         }
     },
 
     HelpState: {
         YesIntent(){
             this.$speech.addText("You can also ask me for the top 10 news or headlines and for news that are one day to a week old.")
-                        .addBreak("100ms").addText("What do you want to hear?");
+                        .addText("<break time=\"1s\"/>")
+                        .addText("What do you want to hear?");
+                        
             this.$reprompt.addText("What do you want to hear?");
 
             this.ask(this.$speech,this.$reprompt);
