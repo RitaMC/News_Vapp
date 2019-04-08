@@ -74,9 +74,17 @@ app.setHandler({
         };
         
         if(theme){
-            requestParams["q"] = `${theme}`;
+
+            //If the user asked for a correct theme
+            if(themes.indexOf(theme) > -1){
+                requestParams["q"] = `${theme}`;
             
-            this.$session.$data.themeChoosen = theme;
+                this.$session.$data.themeChoosen = theme;
+            }else{
+                //TODO Sugestão de topico aleatorio
+                this.ask("My source team just got back to me and they didn't find news about that topic. Why don't you ask me for news about another one?");
+                return;
+            }
         }
 
         if(day){
@@ -85,7 +93,7 @@ app.setHandler({
             var askedDay = moment(day);
 
             if(currentDay.diff(askedDay) > 604800000){
-                this.ask("You cannot ask for news that are more than one week old.");
+                this.ask("I am sorry but I only keep the records of news that are one day to a week old. Please choose another day.");
                 return;
             }else if(currentDay.diff(askedDay) < 0){
                 this.ask("You cannot ask for tomorrow's news");
@@ -96,7 +104,7 @@ app.setHandler({
         }
 
         if(topN  && topN > 10){
-            this.ask("The maximum number of news you can ask for is 10.");
+            this.ask("I am sorry but my sources can only elaborate top's that contain at max 10 news. Please choose another number.");
             return;
         }
 
@@ -154,9 +162,9 @@ app.setHandler({
     },
 
     async HeadlinesIntent(){
-        var theme = this.$inputs.theme.value;
-        var day = this.$inputs.day.value;
-        var topN = this.$inputs.newsNumber.value;
+        var theme = this.$inputs.themeHeadlines.value;
+        var day = this.$inputs.dayHeadlines.value;
+        var topN = this.$inputs.headlinesNumber.value;
 
         var requestParams = {
             sources: 'bbc-news',
@@ -165,16 +173,21 @@ app.setHandler({
         };
         
         if(theme){
-            requestParams["q"] = `${theme}`;
+            if(themes.indexOf(theme) > -1){
+                requestParams["q"] = `${theme}`;
             
-            this.$session.$data.themeChoosen = theme;
+                this.$session.$data.themeChoosen = theme;
+            }else{
+                this.ask("I checked my sources and i can't seem to find headlines about that topic. Please ask me for headlines about another one");
+                return;
+            }
         }
 
         if(day){
             var datetime = new Date();
 
             if(moment(datetime).diff(moment(day)) > 604800000){
-                this.ask("You cannot ask for headlines that are more than one week old.");
+                this.ask("I am sorry but I only keep headlines that are one day to a week old. Please choose another day.");
                 return;
             }else if(moment(datetime).diff(moment(day)) < 0){
                 this.ask("You cannot ask for tomorrow's headlines");
@@ -185,7 +198,7 @@ app.setHandler({
         }
 
         if(topN && topN > 10){
-            this.ask("The maximum number of headlines you can ask for is 10.");
+            this.ask("I am sorry but the top headlines that I am allowed to tell at a time is 10. Would you kindly change your number?");
             return;
         }
 
@@ -259,7 +272,7 @@ app.setHandler({
 
   
     CancelIntent(){
-        this.ask("Want to do anything else today?");
+        this.ask("I can also tell you some headlines or news about some topic you are curious about");
     },
 
     YesIntent(){
@@ -267,7 +280,7 @@ app.setHandler({
     },
 
     NoIntent(){
-        this.tell("Thank you for using the informed. Until a next time!");
+        this.tell("Thank you for choosing us as your news source! See you next time");
     },
 
     StopIntent(){
@@ -322,7 +335,7 @@ app.setHandler({
             this.$speech.addText("You can also ask me for the top 10 news or headlines and for news that are one day to a week old.")
                         .addText("<break time=\"1s\"/>")
                         .addText("What do you want to hear?");
-                        
+
             this.$reprompt.addText("What do you want to hear?");
 
             this.ask(this.$speech,this.$reprompt);
