@@ -15,6 +15,7 @@ module.exports = {
             'AMAZON.RepeatIntent' : 'RepeatIntent',
             'AMAZON.CancelIntent' : 'CancelIntent',
             'AMAZON.NavigateHomeIntent' : 'NavigateHomeIntent',
+            'actions.intent.CANCEL' : 'CancelIntent'
     },
     //Define intents that shouldn't be matched to an Unhandled Intent if not found in a State
     //instead they will be captured globally

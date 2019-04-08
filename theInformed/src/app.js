@@ -45,10 +45,12 @@ app.setHandler({
     },
     WelcomeIntent(){
         var phrase;
-
+  
         if(this.$user.isNewUser()){
             this.$user.$data.numberOfTimesUsed = 0;
-        }else if(this.$user.$data.numberOfTimesUsed < 5){
+        }
+        
+        if(this.$user.$data.numberOfTimesUsed < 5){
             phrase = "Welcome to the informed where we have the latest news and headlines from around the globe! What do you want to hear about today?";
         }else{
             phrase = "Welcome to the Informed! What do you want to hear about today?";
@@ -56,8 +58,11 @@ app.setHandler({
 
         this.$session.last_phrase = phrase;
 
+
         this.$speech.addText(phrase);
         this.$reprompt.addText("What type of news do you want to hear?");
+
+        this.$user.$data.numberOfTimesUsed++;
 
         this.ask(this.$speech,this.$reprompt);
     },
@@ -73,8 +78,9 @@ app.setHandler({
             language: 'en'
         };
         
-        if(theme){
-
+        if(theme != undefined){
+            theme = theme.toLowerCase();
+        
             //If the user asked for a correct theme
             if(themes.indexOf(theme) > -1){
                 requestParams["q"] = `${theme}`;
@@ -87,15 +93,13 @@ app.setHandler({
             }
         }
 
-        if(day){
+        if(day != undefined){
             var datetime = new Date();
-            var currentDay = moment(datetime);
-            var askedDay = moment(day);
 
-            if(currentDay.diff(askedDay) > 604800000){
+            if(moment(datetime).diff(moment(day)) > 604800000){
                 this.ask("I am sorry but I only keep the records of news that are one day to a week old. Please choose another day.");
                 return;
-            }else if(currentDay.diff(askedDay) < 0){
+            }else if(moment(datetime).diff(moment(day)) < 0){
                 this.ask("You cannot ask for tomorrow's news");
                 return;
             }
@@ -103,14 +107,33 @@ app.setHandler({
              requestParams["to"] = `${day}`;
         }
 
-        if(topN  && topN > 10){
+        if(topN != undefined  && topN > TOP_MAX_NEWS_HEADLINES){
             this.ask("I am sorry but my sources can only elaborate top's that contain at max 10 news. Please choose another number.");
+            return;
+        }else if(topN != undefined && topN < 0){
+            this.ask("Please choose a number greater than zero for your top.");
             return;
         }
 
         await newsapi.v2.everything(requestParams).then(response => {
+            var len;
 
-            for (let index = 0; index < 3; index++) {
+            if(response.status === "error" || response.totalResults == 0){
+                this.$speech.addText("I am sorry but my sources cannot find news at the time. Please try again a little later.");
+
+                this.ask(this.$speech,"Want to do anything else today?");
+                return;
+            }
+
+            
+            if(response.totalResults < 3){
+                len = response.totalResults;
+            }else{
+                len = 3;
+            }
+
+
+            for (let index = 0; index < len; index++) {
                 this.$speech.addText(response.articles[index].title)
                             .addText("<break time=\"1s\"/>")
                             .addText(response.articles[index].description)
@@ -118,7 +141,7 @@ app.setHandler({
                             .addText("Published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
                             .addText("<break time=\"2s\"/>")
 
-                if(topN){
+                if(topN != undefined){
                     if(topN > 0){
                         topN--;
                     }else{
@@ -128,11 +151,20 @@ app.setHandler({
                 
             }
 
-            if(topN){
+            if(topN != undefined){
 
                 //if the user asked for a top > 3
                 //else just return the news
                 if(topN > 0){
+
+                    //If we couldn't find enough news
+                    if(len < 3){
+                        this.$speech.addText("My source team could only gather "+len+" news for you. Want to do anything else?")
+    
+                        this.ask(this.$speech,"Want to do do anything else today?");
+                        return;
+                    }
+
                     for(var i = 3; topN > 0; topN--){
                         this.$speech.addText(response.articles[i].title)
                                     .addText("<break time=\"1s\"/>")
@@ -172,7 +204,9 @@ app.setHandler({
             language: 'en'
         };
         
-        if(theme){
+        if(theme != undefined){
+            theme = theme.toLowerCase();
+
             if(themes.indexOf(theme) > -1){
                 requestParams["q"] = `${theme}`;
             
@@ -183,7 +217,7 @@ app.setHandler({
             }
         }
 
-        if(day){
+        if(day != undefined){
             var datetime = new Date();
 
             if(moment(datetime).diff(moment(day)) > 604800000){
@@ -197,43 +231,68 @@ app.setHandler({
              requestParams["to"] = `${day}`;
         }
 
-        if(topN && topN > 10){
+        if(topN != undefined && topN > TOP_MAX_NEWS_HEADLINES){
             this.ask("I am sorry but the top headlines that I am allowed to tell at a time is 10. Would you kindly change your number?");
+            return;
+        }else if(topN != undefined && topN < 0){
+            this.ask("Please choose a number greater than zero for your top.");
             return;
         }
 
         await newsapi.v2.topHeadlines(requestParams).then(response => {
+            var len;
 
-            for (var index = 0; index < 3; index++) {
+            if(response.status === "error" || response.totalResults == 0){
+                this.$speech.addText("I am sorry but my sources cannot find headlines at the time. Please try again a little later.");
+
+                this.ask(this.$speech,"Want to do anything else today?");
+                return;
+            }
+
+            
+            if(response.totalResults < 3){
+                len = response.totalResults;
+            }else{
+                len = 3;
+            }
+
+            for (var index = 0; index < len; index++) {
                 this.$speech.addText(response.articles[index].title)
                             .addText("<break time=\"1s\"/>")
                             .addText("published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
                             .addText("<break time=\"2s\"/>")
 
-                if(topN){
+                if(topN != undefined){
                     if(topN > 0){
                         topN--;
                     }else{
                         break;
                     }
                 }
-                
             }
 
-            if(topN){
+
+            if(topN != undefined){
                 if(topN > 0){
+                    if(len < 3){
+                        this.$speech.addText("My source team could only gather "+len+" headlines for you. Want to do anything else?")
+    
+                        this.ask(this.$speech,"Want to do do anything else today?");
+                        return;
+                    }
+
                     for(var i = 3 ; topN > 0; topN--){
                         this.$speech.addText(response.articles[i].title)
                                     .addText("<break time=\"1s\"/>")
                                     .addText("published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD"))
                                     .addText("<break time=\"2s\"/>")
                     }
-                    this.$speech.addText("Want to do do anything else today?");
-                
-                    this.ask(this.$speech);
-                    return;
-
                 }
+
+                this.$speech.addText("Want to do do anything else today?");
+                
+                this.ask(this.$speech,"Want to do do anything else today?");
+                return;
             }
             
             //The user didn't ask for a top and we need to know if we still wants to hear more 2 headlines              
@@ -291,7 +350,7 @@ app.setHandler({
         YesIntent(){
             var articles = this.$session.$data.articles;
 
-            for(var i = 3; i < 5; i++){
+            for(var i = 3; i < NORMAL_MAX_NEWS_HEADLINES; i++){
                 this.$speech.addText(articles[i].title)
                             .addText("<break time=\"1s\"/>")
                             .addText(articles[i].description)
@@ -300,13 +359,13 @@ app.setHandler({
                             .addText("<break time=\"2s\"/>")
             }
 
-            this.$speech("Want to do anything else today?");
+            this.$speech.addText("Want to do anything else today?");
 
             this.followUpState(null).ask(this.$speech,"Want to do anything else today?");
         },
 
         NoIntent(){
-            this.ask("Want to hear anything else today?","Perhaps some headlines about Business or Education.");
+            this.followUpState(null).ask("Want to hear anything else today?","Perhaps some headlines about Business or Education.");
         }
     },
 
@@ -314,7 +373,7 @@ app.setHandler({
         YesIntent(){
             var articles = this.$session.$data.articles;
 
-            for(var i = 3; i < 5; i++){
+            for(var i = 3; i < NORMAL_MAX_NEWS_HEADLINES; i++){
                 this.$speech.addText(articles[i].title)
                             .addText("<break time=\"1s\"/>")
                             .addText("Published in "+moment(articles[i].publishedAt).format("YYYY-MM-DD"))
@@ -326,7 +385,7 @@ app.setHandler({
         },
 
         NoIntent(){
-            this.ask("Want to do anything else today?","Perhaps some news about Business or Education.");
+            this.followUpState(null).ask("Want to hear anything else today?","Perhaps some headlines about Business or Education.");
         }
     },
 
