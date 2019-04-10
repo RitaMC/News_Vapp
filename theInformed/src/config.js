@@ -9,18 +9,19 @@ module.exports = {
     intentMap: {
         'AMAZON.FallbackIntent' : 'FallbackIntent',
             'AMAZON.YesIntent' : 'YesIntent',
-            'AMAZON.StopIntent' : 'END',
+            'AMAZON.StopIntent' : 'StopIntent',
             'AMAZON.NoIntent' : 'NoIntent',
             'AMAZON.HelpIntent' : 'HelpIntent',
             'AMAZON.RepeatIntent' : 'RepeatIntent',
             'AMAZON.CancelIntent' : 'CancelIntent',
             'AMAZON.NavigateHomeIntent' : 'NavigateHomeIntent',
-            'actions.intent.CANCEL' : 'CancelIntent'
     },
     //Define intents that shouldn't be matched to an Unhandled Intent if not found in a State
     //instead they will be captured globally
     intentsToSkipUnhandled: [
-        'END'
+        'StopIntent',
+        'CancelIntent',
+        "FallbackIntent"
     ],
 
     user: {

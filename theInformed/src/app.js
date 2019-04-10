@@ -56,7 +56,7 @@ app.setHandler({
             phrase = "Welcome to the Informed! What do you want to hear about today?";
         }
 
-        this.$session.last_phrase = phrase;
+        this.$session.$data.last_phrase = phrase;
 
 
         this.$speech.addText(phrase);
@@ -67,10 +67,13 @@ app.setHandler({
         this.ask(this.$speech,this.$reprompt);
     },
 
+
     async NewsIntent(){
         var theme = this.$inputs.theme.value;
         var day = this.$inputs.day.value;
         var topN = this.$inputs.newsNumber.value;
+
+        this.$session.$data.requested = "NEWS";
 
         var requestParams = {
             sources: 'bbc-news',
@@ -78,7 +81,7 @@ app.setHandler({
             language: 'en'
         };
         
-        if(theme != undefined){
+        if(theme != undefined && theme != ""){
             theme = theme.toLowerCase();
         
             //If the user asked for a correct theme
@@ -87,30 +90,37 @@ app.setHandler({
             
                 this.$session.$data.themeChoosen = theme;
             }else{
-                //TODO Sugestão de topico aleatorio
-                this.ask("My source team just got back to me and they didn't find news about that topic. Why don't you ask me for news about another one?");
+                var randomTheme = themes[Math.floor(Math.random()*themes.len)];
+                
+                this.$session.$data.last_phrase = "My source team just got back to me and they didn't find news about that topic. Why don't you ask me for news about "+`${randomTheme}`+"?";
+                this.ask("My source team just got back to me and they didn't find news about that topic. Why don't you ask me for news about "+`${randomTheme}`+"?");
                 return;
             }
         }
 
-        if(day != undefined){
+        if(day != undefined && day != ""){
             var datetime = new Date();
 
             if(moment(datetime).diff(moment(day)) > 604800000){
+                this.$session.$data.last_phrase = "I am sorry but I only keep the records of news that are one day to a week old. Please choose another day.";
                 this.ask("I am sorry but I only keep the records of news that are one day to a week old. Please choose another day.");
                 return;
             }else if(moment(datetime).diff(moment(day)) < 0){
+                this.$session.$data.last_phrase = "You cannot ask for tomorrow's news";
                 this.ask("You cannot ask for tomorrow's news");
+
                 return;
             }
             
-             requestParams["to"] = `${day}`;
+                requestParams["to"] = `${day}`;
         }
 
-        if(topN != undefined  && topN > TOP_MAX_NEWS_HEADLINES){
+        if(topN != undefined  && topN > TOP_MAX_NEWS_HEADLINES && topN != ""){
+            this.$session.$data.last_phrase = "I am sorry but my sources can only elaborate top's that contain at max 10 news. Please choose another number.";
             this.ask("I am sorry but my sources can only elaborate top's that contain at max 10 news. Please choose another number.");
             return;
-        }else if(topN != undefined && topN < 0){
+        }else if(topN != undefined && topN < 0 && topN != ""){
+            this.$session.$data.last_phrase = "Please choose a number greater than zero for your top.";
             this.ask("Please choose a number greater than zero for your top.");
             return;
         }
@@ -119,6 +129,7 @@ app.setHandler({
             var len;
 
             if(response.status === "error" || response.totalResults == 0){
+                this.$session.$data.last_phrase = "I am sorry but my sources cannot find news at the time. Please try again a little later.";
                 this.$speech.addText("I am sorry but my sources cannot find news at the time. Please try again a little later.");
 
                 this.ask(this.$speech,"Want to do anything else today?");
@@ -141,7 +152,7 @@ app.setHandler({
                             .addText("Published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
                             .addText("<break time=\"2s\"/>")
 
-                if(topN != undefined){
+                if(topN != undefined && topN != ""){
                     if(topN > 0){
                         topN--;
                     }else{
@@ -151,7 +162,7 @@ app.setHandler({
                 
             }
 
-            if(topN != undefined){
+            if(topN != undefined && topN != ""){
 
                 //if the user asked for a top > 3
                 //else just return the news
@@ -159,9 +170,10 @@ app.setHandler({
 
                     //If we couldn't find enough news
                     if(len < 3){
-                        this.$speech.addText("My source team could only gather "+len+" news for you. Want to do anything else?")
+                        this.$speech.addText("My source team could only gather "+len+" news for you. Want to do anything else?");
+                        this.$session.$data.last_phrase = this.$speech;
     
-                        this.ask(this.$speech,"Want to do do anything else today?");
+                        this.ask(this.$speech,"Want to do anything else today?");
                         return;
                     }
 
@@ -175,9 +187,11 @@ app.setHandler({
                     }
                 }
                 
-                this.$speech.addText("Want to do do anything else today?");
+                this.$speech.addText("Want to do anything else today?");
 
+                this.$session.$data.last_phrase = this.$speech;
                 this.ask(this.$speech);
+
                 return;
             }
 
@@ -186,6 +200,8 @@ app.setHandler({
 
             //So we don't have to access the API again
             this.$session.$data.articles = response.articles;
+
+            this.$session.$data.last_phrase = this.$speech;
 
             this.followUpState('NewsState').ask(this.$speech,"Want to hear more news?");
         }, error => {
@@ -198,13 +214,15 @@ app.setHandler({
         var day = this.$inputs.dayHeadlines.value;
         var topN = this.$inputs.headlinesNumber.value;
 
+        this.$session.$data.requested = "HEADLINES";
+
         var requestParams = {
             sources: 'bbc-news',
             pageSize: 10,
             language: 'en'
         };
         
-        if(theme != undefined){
+        if(theme != undefined && theme != ""){
             theme = theme.toLowerCase();
 
             if(themes.indexOf(theme) > -1){
@@ -212,29 +230,36 @@ app.setHandler({
             
                 this.$session.$data.themeChoosen = theme;
             }else{
-                this.ask("I checked my sources and i can't seem to find headlines about that topic. Please ask me for headlines about another one");
+                var randomTheme = themes[Math.floor(Math.random()*themes.len)];
+                this.$session.$data.last_phrase = "I checked my sources and i can't seem to find headlines about that topic. Why don't you ask me for headlines about about "+`${randomTheme}`+"?";
+
+                this.ask("I checked my sources and i can't seem to find headlines about that topic. Why don't you ask me for headlines about about "+`${randomTheme}`+"?");
                 return;
             }
         }
 
-        if(day != undefined){
+        if(day != undefined && day != ""){
             var datetime = new Date();
 
             if(moment(datetime).diff(moment(day)) > 604800000){
+                this.$session.$data.last_phrase = "I am sorry but I only keep headlines that are one day to a week old. Please choose another day.";
                 this.ask("I am sorry but I only keep headlines that are one day to a week old. Please choose another day.");
                 return;
             }else if(moment(datetime).diff(moment(day)) < 0){
+                this.$session.$data.last_phrase = "You cannot ask for tomorrow's headlines";
                 this.ask("You cannot ask for tomorrow's headlines");
                 return;
             }
             
-             requestParams["to"] = `${day}`;
+                requestParams["to"] = `${day}`;
         }
 
-        if(topN != undefined && topN > TOP_MAX_NEWS_HEADLINES){
+        if(topN != undefined && topN > TOP_MAX_NEWS_HEADLINES && topN != ""){
+            this.$session.$data.last_phrase = "I am sorry but the top headlines that I am allowed to tell at a time is 10. Would you kindly change your number?";
             this.ask("I am sorry but the top headlines that I am allowed to tell at a time is 10. Would you kindly change your number?");
             return;
-        }else if(topN != undefined && topN < 0){
+        }else if(topN != undefined && topN < 0 && topN != ""){
+            this.$session.$data.last_phrase = "Please choose a number greater than zero for your top.";
             this.ask("Please choose a number greater than zero for your top.");
             return;
         }
@@ -244,6 +269,7 @@ app.setHandler({
 
             if(response.status === "error" || response.totalResults == 0){
                 this.$speech.addText("I am sorry but my sources cannot find headlines at the time. Please try again a little later.");
+                this.$session.$data.last_phrase = this.$speech;
 
                 this.ask(this.$speech,"Want to do anything else today?");
                 return;
@@ -262,7 +288,7 @@ app.setHandler({
                             .addText("published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
                             .addText("<break time=\"2s\"/>")
 
-                if(topN != undefined){
+                if(topN != undefined && topN != ""){
                     if(topN > 0){
                         topN--;
                     }else{
@@ -272,12 +298,13 @@ app.setHandler({
             }
 
 
-            if(topN != undefined){
+            if(topN != undefined && topN != ""){
                 if(topN > 0){
                     if(len < 3){
                         this.$speech.addText("My source team could only gather "+len+" headlines for you. Want to do anything else?")
-    
-                        this.ask(this.$speech,"Want to do do anything else today?");
+                        this.$session.$data.last_phrase = this.$speech;
+
+                        this.ask(this.$speech,"Want to do anything else today?");
                         return;
                     }
 
@@ -289,9 +316,10 @@ app.setHandler({
                     }
                 }
 
-                this.$speech.addText("Want to do do anything else today?");
+                this.$speech.addText("Want to do anything else today?");
+                this.$session.$data.last_phrase = this.$speech;
                 
-                this.ask(this.$speech,"Want to do do anything else today?");
+                this.ask(this.$speech,"Want to do anything else today?");
                 return;
             }
             
@@ -300,10 +328,11 @@ app.setHandler({
 
             //So we don't have to access the API again
             this.$session.$data.articles = response.articles;
+            this.$session.$data.last_phrase = this.$speech;
 
             this.followUpState('HeadlinesState').ask(this.$speech,"Want to hear more headlines?");
         },
-         error => { this.ask("I am sorry but I wasn't able to gather some headlines for you. Please try again later.");});
+            error => { this.ask("I am sorry but I wasn't able to gather some headlines for you. Please try again later.");});
     },
 
     RepeatIntent(){
@@ -314,7 +343,7 @@ app.setHandler({
         }
 
         this.$speech.addText(phrase);
-        this.$reprompt.addText(phrase);
+        this.$reprompt.addText("Want to do anything else today?");
 
         this.ask(this.$speech,this.$reprompt);        
     },
@@ -322,16 +351,30 @@ app.setHandler({
     HelpIntent(){
         this.$speech.addText("You can ask me for the latest news or the top headlines of the day. You can also ask me for news or headlines about a specific topic.")
                     .addText("<break time=\"1s\"/>")
+                    .addText("You can choose topics like Art, Finances, Sports, Technology and Politics. For more topics please consult the app description.")
+                    .addText("<break time=\"1s\"/>")
                     .addText("Want to know more?");
                     
         this.$reprompt.addText("Want to know more?");
+        this.$session.$data.last_phrase = this.$speech;
 
         this.ask(this.$speech,this.$reprompt);
     },
 
-  
+    
     CancelIntent(){
-        this.ask("I can also tell you some headlines or news about some topic you are curious about");
+        var req = this.$session.$data.requested;
+
+        if(req === "NEWS"){
+            this.$session.$data.last_phrase = "I can also tell you some headlines about a topic of your choice";
+            this.ask("I can also tell you some headlines about a topic of your choice");
+        }else if(req  === "HEADLINES"){
+            this.$session.$data.last_phrase = "I can also tell you the latest news if you want";
+            this.ask("I can also tell you the latest news if you want");
+        }else{
+            this.$session.$data.last_phrase = "I can also tell you some headlines or news about a topic of your choice";
+            this.ask("I can also tell you some headlines or news about a topic of your choice");
+        }        
     },
 
     YesIntent(){
@@ -343,7 +386,15 @@ app.setHandler({
     },
 
     StopIntent(){
-        this.tell("Thank you for using the informed, your loyal news source. See you next time!");
+        this.tell("Thank you for using the informed. See you next time");
+    },
+
+    FallbackIntent(){
+        this.tell("Error");
+    },
+
+    Unhandled: function(){
+        this.toIntent('FallbackIntent');
     },
 
     NewsState: {
@@ -360,12 +411,17 @@ app.setHandler({
             }
 
             this.$speech.addText("Want to do anything else today?");
+            this.$session.$data.last_phrase = this.$speech;
 
             this.followUpState(null).ask(this.$speech,"Want to do anything else today?");
         },
 
         NoIntent(){
-            this.followUpState(null).ask("Want to hear anything else today?","Perhaps some headlines about Business or Education.");
+            var randomTheme = themes[Math.floor(Math.random()*themes.len)];
+
+            this.$session.$data.last_phrase = "Want to hear anything else today? Perhaps some headlines about "+`${randomTheme}`+"?";
+
+            this.followUpState(null).ask("Want to hear anything else today?","Perhaps some headlines about "+`${randomTheme}`+"?");
         }
     },
 
@@ -381,11 +437,17 @@ app.setHandler({
             }
 
             this.$speech.addText("Want to do anything else today?");
+            this.$session.$data.last_phrase = this.$speech;
+
             this.followUpState(null).ask(this.$speech,"Want to do anything else today?");
         },
 
         NoIntent(){
-            this.followUpState(null).ask("Want to hear anything else today?","Perhaps some headlines about Business or Education.");
+            var randomTheme = themes[Math.floor(Math.random()*themes.len)];
+
+            this.$session.$data.last_phrase = "Want to hear anything else today? Perhaps some news about "+`${randomTheme}`+"?";
+          
+            this.followUpState(null).ask("Want to hear anything else today?","Perhaps some news about "+`${randomTheme}`+"?");
         }
     },
 
@@ -396,21 +458,16 @@ app.setHandler({
                         .addText("What do you want to hear?");
 
             this.$reprompt.addText("What do you want to hear?");
+            this.$session.$data.last_phrase = this.$speech;
 
-            this.ask(this.$speech,this.$reprompt);
+            this.followUpState(null).ask(this.$speech,this.$reprompt);
         },
 
         NoIntent(){
-            this.followUpState(null).ask("What do you want to hear today?");
+            this.$session.$data.last_phrase = "What do you want to hear today? Headlines or news?";
+
+            this.followUpState(null).ask("What do you want to hear today?", "Headlines or news?");
         }
-    },
-
-    FallbackIntent(){
-        this.tell("Error");
-    },
-
-    Unhandled: function(){
-        this.toIntent('FallbackIntent');
     }
 });
 
