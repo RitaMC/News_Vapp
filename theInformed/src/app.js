@@ -53,7 +53,7 @@ app.setHandler({
         }
 
         this.$session.$data.last_phrase = phrase;
-
+        this.$session.$data.numError = 0;
 
         this.$speech.addText(phrase);
         this.$reprompt.addText("What type of news do you want to hear?");
@@ -68,6 +68,7 @@ app.setHandler({
         var topN = this.$inputs.newsNumber.value;
 
         this.$session.$data.requested = "NEWS";
+        this.$session.$data.numError = 0;
 
         var requestParams = {
             sources: 'bbc-news',
@@ -172,7 +173,7 @@ app.setHandler({
                         return;
                     }
 
-                    for(var i = 3; topN > 0; topN--){
+                    for(var i = 3; topN > 0; topN--,i++){
                         news_phrase += response.articles[i].title;
                         news_phrase += " <break time=\"1s\"/> ";
                         news_phrase += response.articles[i].description;
@@ -213,6 +214,7 @@ app.setHandler({
         var topN = this.$inputs.headlinesNumber.value;
 
         this.$session.$data.requested = "HEADLINES";
+        this.$session.$data.numError = 0;
 
         var requestParams = {
             sources: 'bbc-news',
@@ -308,7 +310,7 @@ app.setHandler({
                         return;
                     }
 
-                    for(var i = 3 ; topN > 0; topN--){
+                    for(var i = 3 ; topN > 0; topN--, i++){
                         headlines_phrase += response.articles[i].title;
                         headlines_phrase += " <break time=\"1s\"/> ";
                         headlines_phrase += "published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD");
@@ -340,6 +342,7 @@ app.setHandler({
 
     RepeatIntent(){
         var phrase = this.$session.$data.last_phrase;
+        this.$session.$data.numError = 0;
         
         if(phrase == undefined){
             phrase = "Sorry, but there is nothing for me to repeat.";
@@ -363,13 +366,15 @@ app.setHandler({
         this.$reprompt.addText("Want to know more?");
 
         this.$session.$data.last_phrase = phrase;
+        this.$session.$data.numError = 0;
 
-        this.ask(this.$speech,this.$reprompt);
+        this.followUpState("HelpState").ask(this.$speech,this.$reprompt);
     },
 
     
     CancelIntent(){
         var req = this.$session.$data.requested;
+        this.$session.$data.numError = 0;
 
         if(req === "NEWS"){
             this.$session.$data.last_phrase = "I can also tell you some headlines about a topic of your choice";
@@ -388,6 +393,7 @@ app.setHandler({
     },
 
     YesIntent(){
+        this.$session.$data.numError = 0;
         var req = this.$session.$data.requested;
         var phrase;
 
@@ -427,8 +433,26 @@ app.setHandler({
     },
 
     FallbackIntent(){
+        var num_error = this.$session.$data.numError;
         var default_phrase = "Sorry but it seems that a problem has occurred. Can you tell me again what news or headlines you wanted to hear?";
-        this.ask(default_phrase);
+
+        num_error++;
+
+        this.$session.$data.numError = num_error;
+
+        switch(num_error){
+            case 1:
+                this.ask("Sorry I can only tell you news or headlines.");
+                break;
+            case 2:
+                this.ask("I am sorry but I didn't get your request. Do you want to hear the news perhaps?");
+                break;
+            case 3:
+                this.tell("Sorry, that seems to be beyond my expertise, so let’s stop here for today. Goodbye!");
+                break;
+            default : this.ask(default_phrase);
+        }       
+
     },
 
     Unhandled: function(){
@@ -453,6 +477,7 @@ app.setHandler({
 
             this.$speech.addText(news_phrase);
             this.$session.$data.last_phrase = news_phrase;
+            this.$session.$data.numError = 0;
 
             this.followUpState(null).ask(this.$speech,"Want to do anything else today?");
         },
@@ -482,6 +507,7 @@ app.setHandler({
 
             this.$speech.addText(headlines_phrase);
             this.$session.$data.last_phrase = headlines_phrase;
+            this.$session.$data.numError = 0;
 
             this.followUpState(null).ask(this.$speech,"Want to do anything else today?");
         },
@@ -490,6 +516,7 @@ app.setHandler({
             var randomTheme = themes[Math.floor(Math.random()*themes.len)];
 
             this.$session.$data.last_phrase = "Want to hear anything else today? Perhaps some news about "+`${randomTheme}`+"?";
+            this.$session.$data.numError = 0;
           
             this.followUpState(null).ask("Want to hear anything else today?","Perhaps some news about "+`${randomTheme}`+"?");
         }
@@ -497,19 +524,23 @@ app.setHandler({
 
     HelpState: {
         YesIntent(){
-            var phrase = "You can also ask me for a top with at most 10 news or headlines and for news or headlines that are one day to a week old.";
+            var phrase = "You can also ask me for a top with at most 10 news or headlines";
+            phrase += "<break time=\"0.20ms\"/>";
+            phrase +=  "and for news or headlines that are one day to a week old.";
             phrase += " <break time=\"1s\"/> ";
             phrase += "What do you want to hear?"
 
             this.$speech.addText(phrase);
             this.$reprompt.addText("What do you want to hear?");
             this.$session.$data.last_phrase = phrase;
+            this.$session.$data.numError = 0;
 
             this.followUpState(null).ask(this.$speech,this.$reprompt);
         },
 
         NoIntent(){
             this.$session.$data.last_phrase = "What do you want to hear today? Headlines or news?";
+            this.$session.$data.numError = 0;
 
             this.followUpState(null).ask("What do you want to hear today?", "Headlines or news?");
         }
