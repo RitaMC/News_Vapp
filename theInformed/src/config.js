@@ -26,7 +26,7 @@ module.exports = {
 
     user: {
         metaData: {
-            enabled: false,
+            enabled: true,
             lastUsedAt: true,
             sessionsCount: true,
             createdAt: true,

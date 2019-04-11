@@ -45,12 +45,8 @@ app.setHandler({
     },
     WelcomeIntent(){
         var phrase;
-  
-        if(this.$user.isNewUser()){
-            this.$user.$data.numberOfTimesUsed = 0;
-        }
-        
-        if(this.$user.$data.numberOfTimesUsed < 5){
+
+        if(this.$user.$metaData.sessionsCount == undefined || this.$user.$metaData.sessionsCount < 5){
             phrase = "Welcome to the informed where we have the latest news and headlines from around the globe! What do you want to hear about today?";
         }else{
             phrase = "Welcome to the Informed! What do you want to hear about today?";
@@ -61,8 +57,6 @@ app.setHandler({
 
         this.$speech.addText(phrase);
         this.$reprompt.addText("What type of news do you want to hear?");
-
-        this.$user.$data.numberOfTimesUsed++;
 
         this.ask(this.$speech,this.$reprompt);
     },
@@ -118,10 +112,12 @@ app.setHandler({
         if(topN != undefined  && topN > TOP_MAX_NEWS_HEADLINES && topN != ""){
             this.$session.$data.last_phrase = "I am sorry but my sources can only elaborate top's that contain at max 10 news. Please choose another number.";
             this.ask("I am sorry but my sources can only elaborate top's that contain at max 10 news. Please choose another number.");
+           
             return;
         }else if(topN != undefined && topN < 0 && topN != ""){
             this.$session.$data.last_phrase = "Please choose a number greater than zero for your top.";
             this.ask("Please choose a number greater than zero for your top.");
+
             return;
         }
 
@@ -135,7 +131,6 @@ app.setHandler({
                 this.ask(this.$speech,"Want to do anything else today?");
                 return;
             }
-
             
             if(response.totalResults < 3){
                 len = response.totalResults;
@@ -143,14 +138,15 @@ app.setHandler({
                 len = 3;
             }
 
+            var news_phrase = "";
 
             for (let index = 0; index < len; index++) {
-                this.$speech.addText(response.articles[index].title)
-                            .addText("<break time=\"1s\"/>")
-                            .addText(response.articles[index].description)
-                            .addText("<break time=\"1s\"/>")
-                            .addText("Published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
-                            .addText("<break time=\"2s\"/>")
+                news_phrase += response.articles[index].title;
+                news_phrase += " <break time=\"1s\"/> ";
+                news_phrase += response.articles[index].description;
+                news_phrase += " <break time=\"1s\"/> ";
+                news_phrase += "Published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD");
+                news_phrase += " <break time=\"2s\"/> ";
 
                 if(topN != undefined && topN != ""){
                     if(topN > 0){
@@ -161,9 +157,8 @@ app.setHandler({
                 }
                 
             }
-
+ 
             if(topN != undefined && topN != ""){
-
                 //if the user asked for a top > 3
                 //else just return the news
                 if(topN > 0){
@@ -171,37 +166,40 @@ app.setHandler({
                     //If we couldn't find enough news
                     if(len < 3){
                         this.$speech.addText("My source team could only gather "+len+" news for you. Want to do anything else?");
-                        this.$session.$data.last_phrase = this.$speech;
+                        this.$session.$data.last_phrase = "My source team could only gather "+len+" news for you. Want to do anything else?";
     
                         this.ask(this.$speech,"Want to do anything else today?");
                         return;
                     }
 
                     for(var i = 3; topN > 0; topN--){
-                        this.$speech.addText(response.articles[i].title)
-                                    .addText("<break time=\"1s\"/>")
-                                    .addText(response.articles[i].description)
-                                    .addText("<break time=\"1s\"/>")
-                                    .addText("Published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD"))
-                                    .addText("<break time=\"2s\"/>")
+                        news_phrase += response.articles[i].title;
+                        news_phrase += " <break time=\"1s\"/> ";
+                        news_phrase += response.articles[i].description;
+                        news_phrase += " <break time=\"1s\"/> ";
+                        news_phrase += "Published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD");
+                        news_phrase += " <break time=\"2s\"/> ";
                     }
                 }
                 
-                this.$speech.addText("Want to do anything else today?");
+                news_phrase += "Want to do anything else today?"
 
-                this.$session.$data.last_phrase = this.$speech;
-                this.ask(this.$speech);
+                this.$speech.addText(news_phrase);
+
+                this.$session.$data.last_phrase = news_phrase;
+                this.ask(this.$speech,"Want to do anything else today?");
 
                 return;
             }
 
-            //The user didn't ask for a top and we need to know if we still wants to hear more 2 news                
-            this.$speech.addText("Want to hear more news?");
+            //The user didn't ask for a top and we need to know if we still wants to hear more 2 news              
+            news_phrase += "Want to hear more news?";
+            this.$speech.addText(news_phrase);
 
             //So we don't have to access the API again
             this.$session.$data.articles = response.articles;
 
-            this.$session.$data.last_phrase = this.$speech;
+            this.$session.$data.last_phrase = news_phrase;
 
             this.followUpState('NewsState').ask(this.$speech,"Want to hear more news?");
         }, error => {
@@ -269,7 +267,7 @@ app.setHandler({
 
             if(response.status === "error" || response.totalResults == 0){
                 this.$speech.addText("I am sorry but my sources cannot find headlines at the time. Please try again a little later.");
-                this.$session.$data.last_phrase = this.$speech;
+                this.$session.$data.last_phrase = "I am sorry but my sources cannot find headlines at the time. Please try again a little later.";
 
                 this.ask(this.$speech,"Want to do anything else today?");
                 return;
@@ -282,11 +280,13 @@ app.setHandler({
                 len = 3;
             }
 
+            var headlines_phrase = "";
+
             for (var index = 0; index < len; index++) {
-                this.$speech.addText(response.articles[index].title)
-                            .addText("<break time=\"1s\"/>")
-                            .addText("published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD"))
-                            .addText("<break time=\"2s\"/>")
+                headlines_phrase += response.articles[index].title;
+                headlines_phrase += " <break time=\"1s\"/> ";
+                headlines_phrase += "published in "+moment(response.articles[index].publishedAt).format("YYYY-MM-DD");
+                headlines_phrase += " <break time=\"2s\"/> ";
 
                 if(topN != undefined && topN != ""){
                     if(topN > 0){
@@ -302,33 +302,36 @@ app.setHandler({
                 if(topN > 0){
                     if(len < 3){
                         this.$speech.addText("My source team could only gather "+len+" headlines for you. Want to do anything else?")
-                        this.$session.$data.last_phrase = this.$speech;
+                        this.$session.$data.last_phrase = "My source team could only gather "+len+" headlines for you. Want to do anything else?";
 
                         this.ask(this.$speech,"Want to do anything else today?");
                         return;
                     }
 
                     for(var i = 3 ; topN > 0; topN--){
-                        this.$speech.addText(response.articles[i].title)
-                                    .addText("<break time=\"1s\"/>")
-                                    .addText("published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD"))
-                                    .addText("<break time=\"2s\"/>")
+                        headlines_phrase += response.articles[i].title;
+                        headlines_phrase += " <break time=\"1s\"/> ";
+                        headlines_phrase += "published in "+moment(response.articles[i].publishedAt).format("YYYY-MM-DD");
+                        headlines_phrase += " <break time=\"2s\"/> ";
                     }
                 }
 
-                this.$speech.addText("Want to do anything else today?");
-                this.$session.$data.last_phrase = this.$speech;
+                headlines_phrase += "Want to do anything else today?";
+
+                this.$speech.addText(headlines_phrase);
+                this.$session.$data.last_phrase = headlines_phrase;
                 
                 this.ask(this.$speech,"Want to do anything else today?");
                 return;
             }
             
             //The user didn't ask for a top and we need to know if we still wants to hear more 2 headlines              
-            this.$speech.addText("Want to hear more headlines?");
+            headlines_phrase += "Want to hear more headlines?"
+            this.$speech.addText(headlines_phrase);
 
             //So we don't have to access the API again
             this.$session.$data.articles = response.articles;
-            this.$session.$data.last_phrase = this.$speech;
+            this.$session.$data.last_phrase = headlines_phrase;
 
             this.followUpState('HeadlinesState').ask(this.$speech,"Want to hear more headlines?");
         },
@@ -336,9 +339,9 @@ app.setHandler({
     },
 
     RepeatIntent(){
-        var phrase = this.$session.last_phrase;
+        var phrase = this.$session.$data.last_phrase;
         
-        if(phrase.lenght == 0){
+        if(phrase == undefined){
             phrase = "Sorry, but there is nothing for me to repeat.";
         }
 
@@ -349,14 +352,17 @@ app.setHandler({
     },
 
     HelpIntent(){
-        this.$speech.addText("You can ask me for the latest news or the top headlines of the day. You can also ask me for news or headlines about a specific topic.")
-                    .addText("<break time=\"1s\"/>")
-                    .addText("You can choose topics like Art, Finances, Sports, Technology and Politics. For more topics please consult the app description.")
-                    .addText("<break time=\"1s\"/>")
-                    .addText("Want to know more?");
-                    
+        var phrase = "You can ask me for the latest news or the top headlines of the day. You can also ask me for news or headlines about a specific topic.";
+      
+        phrase += " <break time=\"1s\"/> ";
+        phrase += "You can choose topics like Art, Finances, Sports, Technology and Politics. For more topics please consult the app description.";
+        phrase += " <break time=\"1s\"/> ";
+        phrase += "Want to know more?";
+
+        this.$speech.addText(phrase);
         this.$reprompt.addText("Want to know more?");
-        this.$session.$data.last_phrase = this.$speech;
+
+        this.$session.$data.last_phrase = phrase;
 
         this.ask(this.$speech,this.$reprompt);
     },
@@ -367,9 +373,13 @@ app.setHandler({
 
         if(req === "NEWS"){
             this.$session.$data.last_phrase = "I can also tell you some headlines about a topic of your choice";
+            this.$session.$data.requested = "default";
+
             this.ask("I can also tell you some headlines about a topic of your choice");
         }else if(req  === "HEADLINES"){
             this.$session.$data.last_phrase = "I can also tell you the latest news if you want";
+            this.$session.$data.requested = "default";
+
             this.ask("I can also tell you the latest news if you want");
         }else{
             this.$session.$data.last_phrase = "I can also tell you some headlines or news about a topic of your choice";
@@ -378,19 +388,47 @@ app.setHandler({
     },
 
     YesIntent(){
+        var req = this.$session.$data.requested;
+        var phrase;
 
+        if(req === "NEWS"){
+
+            if(this.$session.$data.themeChoosen){
+                phrase = "You just heard news about "+this.$session.$data.themeChoosen+". Why don't you ask me for today's top headlines?";
+            }else{
+                phrase = "You just heard the news. Why don't you ask me for today's top headlines?";
+            }
+
+            this.$session.$data.last_phrase = phrase;
+            this.$session.$data.requested = "default";
+
+            this.ask(phrase,"I can also tell you some headlines about a topic of your choice");
+        }else if(req  === "HEADLINES"){
+
+            if(this.$session.$data.themeChoosen){
+                phrase = "You just heard some headlines about "+this.$session.$data.themeChoosen+". Why don't you ask me for today's news now?";
+            }else{
+                phrase = "You just heard some headlines. Why don't you ask me for today's news now?";
+            }
+
+            this.$session.$data.last_phrase = phrase;
+            this.$session.$data.requested = "default";
+
+            this.ask(phrase,"I can also tell you some news about a topic of your choice");
+        }  
     },
 
     NoIntent(){
-        this.tell("Thank you for choosing us as your news source! See you next time");
+        this.tell("Thank you for choosing us as your news source! Until a next time");
     },
 
     StopIntent(){
-        this.tell("Thank you for using the informed. See you next time");
+        this.tell("Thank you for using the informed. Until a next time");
     },
 
     FallbackIntent(){
-        this.tell("Error");
+        var default_phrase = "Sorry but it seems that a problem has occurred. Can you tell me again what news or headlines you wanted to hear?";
+        this.ask(default_phrase);
     },
 
     Unhandled: function(){
@@ -400,18 +438,21 @@ app.setHandler({
     NewsState: {
         YesIntent(){
             var articles = this.$session.$data.articles;
+            var news_phrase = "";
 
             for(var i = 3; i < NORMAL_MAX_NEWS_HEADLINES; i++){
-                this.$speech.addText(articles[i].title)
-                            .addText("<break time=\"1s\"/>")
-                            .addText(articles[i].description)
-                            .addText("<break time=\"1s\"/>")
-                            .addText("Published in "+moment(articles[i].publishedAt).format("YYYY-MM-DD"))
-                            .addText("<break time=\"2s\"/>")
+                news_phrase += articles[i].title;
+                news_phrase += " <break time=\"1s\"/> ";
+                news_phrase += articles[i].description;
+                news_phrase += " <break time=\"1s\"/> ";
+                news_phrase += "Published in "+moment(articles[i].publishedAt).format("YYYY-MM-DD");
+                news_phrase += " <break time=\"2s\"/> ";
             }
 
-            this.$speech.addText("Want to do anything else today?");
-            this.$session.$data.last_phrase = this.$speech;
+            news_phrase += "Want to do anything else today?";
+
+            this.$speech.addText(news_phrase);
+            this.$session.$data.last_phrase = news_phrase;
 
             this.followUpState(null).ask(this.$speech,"Want to do anything else today?");
         },
@@ -428,16 +469,19 @@ app.setHandler({
     HeadlinesState: {
         YesIntent(){
             var articles = this.$session.$data.articles;
+            var headlines_phrase = "";
 
             for(var i = 3; i < NORMAL_MAX_NEWS_HEADLINES; i++){
-                this.$speech.addText(articles[i].title)
-                            .addText("<break time=\"1s\"/>")
-                            .addText("Published in "+moment(articles[i].publishedAt).format("YYYY-MM-DD"))
-                            .addText("<break time=\"2s\"/>")
+                headlines_phrase += articles[i].title;
+                headlines_phrase += " <break time=\"1s\"/> ";
+                headlines_phrase += "Published in "+moment(articles[i].publishedAt).format("YYYY-MM-DD");
+                headlines_phrase += " <break time=\"2s\"/> ";
             }
 
-            this.$speech.addText("Want to do anything else today?");
-            this.$session.$data.last_phrase = this.$speech;
+            headlines_phrase += "Want to do anything else today?";
+
+            this.$speech.addText(headlines_phrase);
+            this.$session.$data.last_phrase = headlines_phrase;
 
             this.followUpState(null).ask(this.$speech,"Want to do anything else today?");
         },
@@ -453,12 +497,13 @@ app.setHandler({
 
     HelpState: {
         YesIntent(){
-            this.$speech.addText("You can also ask me for the top 10 news or headlines and for news that are one day to a week old.")
-                        .addText("<break time=\"1s\"/>")
-                        .addText("What do you want to hear?");
+            var phrase = "You can also ask me for a top with at most 10 news or headlines and for news or headlines that are one day to a week old.";
+            phrase += " <break time=\"1s\"/> ";
+            phrase += "What do you want to hear?"
 
+            this.$speech.addText(phrase);
             this.$reprompt.addText("What do you want to hear?");
-            this.$session.$data.last_phrase = this.$speech;
+            this.$session.$data.last_phrase = phrase;
 
             this.followUpState(null).ask(this.$speech,this.$reprompt);
         },
