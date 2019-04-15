@@ -9,7 +9,8 @@ module.exports = {
     intentMap: {
         'AMAZON.FallbackIntent' : 'FallbackIntent',
             'AMAZON.YesIntent' : 'YesIntent',
-            'AMAZON.StopIntent' : 'StopIntent',
+            'AMAZON.StopIntent' : 'END',
+            'StopIntent' : 'END',
             'AMAZON.NoIntent' : 'NoIntent',
             'AMAZON.HelpIntent' : 'HelpIntent',
             'AMAZON.RepeatIntent' : 'RepeatIntent',
@@ -21,7 +22,9 @@ module.exports = {
     intentsToSkipUnhandled: [
         'StopIntent',
         'CancelIntent',
-        "FallbackIntent"
+        "FallbackIntent",
+        'HelpIntent',
+        'END'
     ],
 
     user: {

@@ -425,10 +425,10 @@ app.setHandler({
     },
 
     NoIntent(){
-        this.tell("Thank you for choosing us as your news source! Until a next time");
+        this.toIntent('END');
     },
 
-    StopIntent(){
+    END(){
         this.tell("Thank you for using the informed. Until a next time");
     },
 
